@@ -6,16 +6,24 @@
 
 
 // index 0 for oldest sample
-static float sliding_window[N];
+static float sliding_window[N]={NaN};
 
 float service(void)
 {
 	float mean=0.0;
+	int count=0;
 	for(i=0;i<N;i++)
 	{
-		mean+=sliding_window[i];
+		if(!isnan(sliding_window[i]))
+		{
+			mean+=sliding_window[i];
+			count++;
+		}
 	}
-	mean=/N;
+	if(count!=0)
+		mean=/count;
+	else
+		mean=NaN;
 	return mean;
 }
 void add_sample(float sample)
@@ -40,6 +48,5 @@ void primary_mode()
 	mean=service();
 	StoreOutput(file, mean);
 	print_result(mean);
-	
 }
 
